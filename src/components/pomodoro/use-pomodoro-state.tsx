@@ -9,9 +9,9 @@ export enum TimerType  {
 const defaultTimerConfiguration = new Map<TimerType, number>(
     [
         // The values are in seconds.
-        [TimerType.ShortBreak , 2],
-        [TimerType.LongBreak , 10],
-        [TimerType.FocusWork , 10 ]
+        [TimerType.ShortBreak , 5 * 60 ],
+        [TimerType.LongBreak , 30 * 60 ],
+        [TimerType.FocusWork , 25 * 60 ]
     ]
 )
 
@@ -93,8 +93,13 @@ export const usePomodoroState = ({
     }, [pomodoroState.isPaused, pomodoroState.currentTime])
 
     return [{...pomodoroState},{
-        startTimer: () => { setPomodoroState({...pomodoroState, isPaused: false})},
-        stopTimer: () => setPomodoroState({...pomodoroState, isPaused: true}),
-        resetTimer: () => setPomodoroState({...pomodoroState, currentTime: 0}),}]
+        startTimer: () => { setPomodoroState(prevState => {
+            return {...prevState, isPaused: false}
+        })},
+        stopTimer: () => setPomodoroState(prevState => {
+            return {...prevState, isPaused: true}
+        }),
+        resetTimer: () => setPomodoroState(prevState => {
+            return {...prevState, isPaused: true, currentTime: timerConfiguration.get(prevState.currentTimer) ?? 0}
+        })}]
 }
-

@@ -1,0 +1,52 @@
+.pomodoro-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center horizontally */
+    font-family: sans-serif;
+    padding: 20px;
+    border: 1px solid #ccc; /* Add a border */
+    border-radius: 8px; /* Rounded corners */
+}
+
+.pomodoro-title {
+    margin-bottom: 20px;
+    color: #333; /* Darker title color */
+}
+
+.timer-display {
+    margin-bottom: 20px;
+    text-align: center; /* Center the timer text */
+}
+
+.timer-type {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.time-left {
+    font-size: 2em;
+    font-weight: bold;
+}
+
+.timer-controls {
+    display: flex;
+    gap: 10px; /* Space between buttons */
+}
+
+.timer-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    cursor: pointer;
+    transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.timer-button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+.timer-button:active {
+    background-color: #3e8e41; /* Even darker green on click */
+}
