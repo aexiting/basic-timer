@@ -33,13 +33,6 @@ export type PomodoroState = {
     currentTimer: TimerType
 }
 
-const initialState: PomodoroState = {
-    currentTime : defaultTimerConfiguration.get(TimerType.FocusWork) ?? 0,
-    numberOfWorkPeriods: 0,
-    isPaused : true,
-    currentTimer :  TimerType.FocusWork
-}
-
 const rotateTimerType = (type: TimerType): TimerType => {
     switch (type) {
         case TimerType.ShortBreak:
@@ -56,6 +49,14 @@ export const usePomodoroState = ({
     workPeriodsBeforeLongBreak = 4,
     timerConfiguration = defaultTimerConfiguration
                               }: PomodoroStateProps) : [PomodoroState,PomodoroActions] => {
+
+    const initialState: PomodoroState = {
+        currentTime : timerConfiguration.get(TimerType.FocusWork) ?? 0,
+        numberOfWorkPeriods: 0,
+        isPaused : true,
+        currentTimer :  TimerType.FocusWork
+    }
+
     const [pomodoroState, setPomodoroState] = useState(initialState);
 
     const updateTimerState = () => {
