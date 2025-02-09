@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@typescript-eslint/parser": "^8.23.0",
     "cra-template-typescript": "1.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
@@ -12,8 +13,9 @@
     "start": "react-scripts start",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "develop": "webpack-dev-server --mode development",
-    "build" : "webpack --mode production"
+    "build": "webpack --config webpack.config.js --mode development",
+    "server": "webpack serve --mode development --hot",
+    "lint": "eslint ."
   },
   "eslintConfig": {
     "extends": [
@@ -34,8 +36,17 @@
     ]
   },
   "devDependencies": {
+    "@eslint/js": "^9.20.0",
+    "@types/node": "^17.0.29",
     "@types/react-dom": "^19.0.3",
+    "css-loader": "^7.1.2",
+    "eslint": "^8.57.1",
+    "eslint-plugin-react": "^7.37.4",
+    "globals": "^15.14.0",
+    "svg-inline-loader": "^0.8.2",
     "ts-loader": "^9.5.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
