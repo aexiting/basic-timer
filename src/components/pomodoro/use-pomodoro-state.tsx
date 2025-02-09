@@ -1,6 +1,6 @@
 import {useEffect, useState} from "react";
 
-enum TimerType  {
+export enum TimerType  {
     ShortBreak = 'Short Break',
     LongBreak = 'Long Break',
     FocusWork = 'Focus Work',
@@ -11,7 +11,7 @@ const defaultTimerConfiguration = new Map<TimerType, number>(
         // The values are in seconds.
         [TimerType.ShortBreak , 2],
         [TimerType.LongBreak , 10],
-        [TimerType.FocusWork , 5]
+        [TimerType.FocusWork , 10 ]
     ]
 )
 
@@ -34,7 +34,7 @@ export type PomodoroState = {
 }
 
 const initialState: PomodoroState = {
-    currentTime : 0,
+    currentTime : defaultTimerConfiguration.get(TimerType.FocusWork) ?? 0,
     numberOfWorkPeriods: 0,
     isPaused : true,
     currentTimer :  TimerType.FocusWork
@@ -59,30 +59,31 @@ export const usePomodoroState = ({
     const [pomodoroState, setPomodoroState] = useState(initialState);
 
     const updateTimerState = () => {
-        const threshold = timerConfiguration.get(pomodoroState.currentTimer);
-        if (!threshold) {
-            throw new Error(`Current timer type not found! Type: ${pomodoroState.currentTimer}`)
-        }
-        if (pomodoroState.currentTime >= threshold){
-            if (pomodoroState.numberOfWorkPeriods >= workPeriodsBeforeLongBreak) {
-                setPomodoroState({...pomodoroState,
-                    currentTimer: TimerType.LongBreak,
-                    numberOfWorkPeriods: 0, currentTime: 0})
+
+        setPomodoroState(prevState => {
+
+            if (prevState.currentTime <= 0){
+                if (prevState.numberOfWorkPeriods >= workPeriodsBeforeLongBreak) {
+                    return{...prevState,
+                        currentTimer: TimerType.LongBreak,
+                        numberOfWorkPeriods: 0, currentTime: timerConfiguration.get(TimerType.LongBreak) ?? 0}
+                }
+                else {
+                    const nextTimer = rotateTimerType(prevState.currentTimer);
+                    return{
+                        ...prevState,
+                        currentTimer: nextTimer,
+                        numberOfWorkPeriods: prevState.currentTimer === TimerType.FocusWork
+                            ? prevState.numberOfWorkPeriods + 1
+                            : prevState.numberOfWorkPeriods,
+                        currentTime:   timerConfiguration.get(nextTimer) ?? 0,
+                    };
+                }
             }
             else {
-                setPomodoroState({
-                    ...pomodoroState,
-                    currentTimer: rotateTimerType(pomodoroState.currentTimer),
-                    numberOfWorkPeriods: pomodoroState.currentTimer === TimerType.FocusWork
-                        ? pomodoroState.numberOfWorkPeriods + 1
-                        : pomodoroState.numberOfWorkPeriods,
-                    currentTime: 0,
-                });
+                return{...prevState, currentTime: prevState.currentTime - 1}
             }
-        }
-        else {
-            setPomodoroState({...pomodoroState, currentTime: pomodoroState.currentTime + 1})
-        }
+        })
     }
 
     useEffect(() => {
