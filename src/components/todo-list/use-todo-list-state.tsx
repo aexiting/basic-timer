@@ -1,6 +1,7 @@
-import {useReducer} from "react";
+import {useState} from "react";
 
 export type Task = {
+    id: string;
     title: string;
     details: string;
     isDone: boolean;
@@ -16,24 +17,60 @@ export type TodoListState = {
 }
 
 export type TodoListActions = {
-    updateTask: (task: Task) => void;
-    deleteTask: (task: Task) => void;
-    createTask: (task: Task) => void;
-    setIsDone: (isDone: boolean, task: Task) => void;
+    updateTask: ({id, title, details, isDone}: {     id: string;     title: string;     details: string;     isDone: boolean; }) => void;
+    deleteTask: (id: string) => void;
+    addTask: (title: string, details: string) => void;
 }
-type Action =
-    {type: 'UpdateTask'; payload: Task} |
-    {type: 'DeleteTask'; payload: Task} |
-    {type: 'CreateTask'; payload: Task} |
-    {type: 'TaskIsDoneSet'; payload: Task};
 
-const useTodoListState = ({ maxTasks, listOfTasks }: TodoListStateProps) => {
+const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoListState, TodoListActions] => {
 
-    const initialState = {
-        listOfTasks: listOfTasks ?? []
+    const [todoListState, setTodoListState] = useState({ listOfTasks: listOfTasks ?? [] })
+
+    const addTask = (title: string, details: string) => {
+        setTodoListState(prevState => {
+            const newTask: Task = {
+                id: crypto.randomUUID(),
+                title,
+                details,
+                isDone: false
+            }
+            if (prevState.listOfTasks?.length < maxTasks) {
+                return {...prevState, listOfTasks: [...prevState.listOfTasks, newTask]}
+            } else {
+                throw new Error('Too many tasks being saved.');
+            }
+        })
     }
-    const tasksReducer: React.Reducer<TodoListState, Action> = (toDoListState: TodoListState, actions) => {
 
+    const updateTask = (
+        {id, title, details, isDone}: { id: string, title: string, details: string, isDone: boolean }
+    ) => {
+        setTodoListState(prevState => {
+            const task = prevState.listOfTasks.find(task => task.id === id);
+            if (!task) {
+                throw new Error('Cannot update task since it was not found.');
+            }
+            const newTaskList = prevState.listOfTasks.map(task =>
+                task.id === id ? { ...task, title, details, isDone } : task
+            );
+            return {...prevState, listOfTasks: newTaskList}
+        })
     }
-    const [tasks, dispatch] = useReducer(initialState)
+
+    const deleteTask = (id: string) => {
+        setTodoListState(prevState => {
+            const task = prevState.listOfTasks.find(task => task.id === id);
+            if (!task) {
+                throw new Error('Cannot delete task since it was not found.');
+            }
+            const newTaskList = prevState.listOfTasks.filter( task => task.id !== id)
+            return {...prevState, listOfTasks: newTaskList}
+        })
+    }
+
+    return [todoListState, {
+       updateTask,
+        deleteTask,
+        addTask
+    }]
 }
