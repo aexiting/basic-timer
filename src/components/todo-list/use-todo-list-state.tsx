@@ -48,7 +48,6 @@ export const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): 
     const updateTask = (
         {id, title, details, isDone, isEditMode}: Task
     ) => {
-        console.log({id, title, details, isDone, isEditMode})
         setTodoListState(prevState => {
             const task = prevState.listOfTasks.find(task => task.id === id);
             if (!task) {
