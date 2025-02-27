@@ -5,6 +5,7 @@ export type Task = {
     title: string;
     details: string;
     isDone: boolean;
+    isEditMode: boolean;
 }
 
 export type TodoListStateProps = {
@@ -14,10 +15,11 @@ export type TodoListStateProps = {
 
 export type TodoListState = {
     listOfTasks: Array<Task>;
+    error?: string;
 }
 
 export type TodoListActions = {
-    updateTask: ({id, title, details, isDone}: {     id: string;     title: string;     details: string;     isDone: boolean; }) => void;
+    updateTask: (task: Task) => void;
     deleteTask: (id: string) => void;
     addTask: (title: string, details: string) => void;
 }
@@ -32,26 +34,27 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
                 id: crypto.randomUUID(),
                 title,
                 details,
-                isDone: false
+                isDone: false,
+                isEditMode: false
             }
-            if (prevState.listOfTasks?.length < maxTasks) {
+            if (prevState.listOfTasks.length < maxTasks) {
                 return {...prevState, listOfTasks: [...prevState.listOfTasks, newTask]}
             } else {
-                throw new Error('Too many tasks being saved.');
+                return {...prevState, error: 'Too many tasks being saved.'}
             }
         })
     }
 
     const updateTask = (
-        {id, title, details, isDone}: { id: string, title: string, details: string, isDone: boolean }
+        {id, title, details, isDone, isEditMode}: Task
     ) => {
         setTodoListState(prevState => {
             const task = prevState.listOfTasks.find(task => task.id === id);
             if (!task) {
-                throw new Error('Cannot update task since it was not found.');
+                return {...prevState, error: 'Task cannot be updated.'}
             }
             const newTaskList = prevState.listOfTasks.map(task =>
-                task.id === id ? { ...task, title, details, isDone } : task
+                task.id === id ? { ...task, title, details, isDone, isEditMode } : task
             );
             return {...prevState, listOfTasks: newTaskList}
         })
@@ -61,7 +64,7 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
         setTodoListState(prevState => {
             const task = prevState.listOfTasks.find(task => task.id === id);
             if (!task) {
-                throw new Error('Cannot delete task since it was not found.');
+                return {...prevState, error: 'Task could not be found.'}
             }
             const newTaskList = prevState.listOfTasks.filter( task => task.id !== id)
             return {...prevState, listOfTasks: newTaskList}
