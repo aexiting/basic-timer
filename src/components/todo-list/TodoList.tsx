@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Task, TodoListActions, TodoListState } from "./use-todo-list-state";
+import "./TodoList.css";  // Import the CSS file
 
 export type TodoListProps = {
     todoListState: TodoListState,
@@ -8,7 +9,7 @@ export type TodoListProps = {
 
 export type SingleTaskProps = Omit<Task, 'id'> & {
     setIsDone: () => void;
-    setEditMode: () => void;
+    toggleEditMode: () => void;
     updateTask: (title: string, details: string) => void;
 }
 
@@ -18,15 +19,16 @@ export const SingleTask = React.memo(({
                                           isDone,
                                           setIsDone,
                                           isEditMode,
-                                          setEditMode,
+                                          toggleEditMode,
                                           updateTask
                                       }: SingleTaskProps) => {
     const [updatedTitle, setUpdatedTitle] = useState(title);
     const [updatedDetails, setUpdatedDetails] = useState(details);
 
+
     return (
         <li>
-            <div className={'task-row-container ' + isDone ? 'completed-task-row' : ''}>
+            <div className={'task-row-container ' + (isDone ? 'completed-task-row' : '')}>
                 {isEditMode ? (
                     <>
                         <input
@@ -48,11 +50,14 @@ export const SingleTask = React.memo(({
                 )}
                 <button onClick={setIsDone} className="timer-button">Done</button>
                 <button onClick={() => {
-                    setEditMode();
                     if (isEditMode) {
                         updateTask(updatedTitle, updatedDetails);
                     }
+                    else {
+                        toggleEditMode();
+                    }
                 }} className="timer-button">
+
                     {isEditMode ? "Finish" : "Edit"}
                 </button>
             </div>
@@ -61,6 +66,9 @@ export const SingleTask = React.memo(({
 });
 
 export const TodoList = ({ todoListActions, todoListState }: TodoListProps) => {
+    const [newTitle, setNewTitle] = useState('');
+    const [newDetails, setNewDetails] = useState('');
+
     return (
         <div className="todo-list-container">
             <ul>
@@ -72,11 +80,27 @@ export const TodoList = ({ todoListActions, todoListState }: TodoListProps) => {
                         isDone={task.isDone}
                         setIsDone={() => todoListActions.updateTask({ ...task, isDone: !task.isDone })}
                         isEditMode={task.isEditMode}
-                        setEditMode={() => todoListActions.updateTask({ ...task, isEditMode: !task.isEditMode })}
-                        updateTask={(title, details) => todoListActions.updateTask({ ...task, details, title })}
+                        toggleEditMode={() => todoListActions.updateTask({ ...task, isEditMode: !task.isEditMode })}
+                        updateTask={(title, details) => todoListActions.updateTask({ ...task, details, title,  isEditMode: !task.isEditMode  })}
                     />
                 ))}
             </ul>
+            <input
+                type="text"
+                value={newTitle}
+                onChange={event => setNewTitle(event.target.value)}
+            />
+            <input
+                type="text"
+                value={newDetails}
+                onChange={event => setNewDetails(event.target.value)}
+            />
+            <button onClick={() => {
+                todoListActions.addTask(newTitle, newDetails)
+                setNewTitle('');
+                setNewDetails('')}}>
+                {'Add new task'}
+            </button>
         </div>
     );
 }

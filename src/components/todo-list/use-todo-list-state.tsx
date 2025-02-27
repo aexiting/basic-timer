@@ -24,7 +24,7 @@ export type TodoListActions = {
     addTask: (title: string, details: string) => void;
 }
 
-const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoListState, TodoListActions] => {
+export const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoListState, TodoListActions] => {
 
     const [todoListState, setTodoListState] = useState({ listOfTasks: listOfTasks ?? [] })
 
@@ -48,6 +48,7 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
     const updateTask = (
         {id, title, details, isDone, isEditMode}: Task
     ) => {
+        console.log({id, title, details, isDone, isEditMode})
         setTodoListState(prevState => {
             const task = prevState.listOfTasks.find(task => task.id === id);
             if (!task) {

@@ -1,0 +1,80 @@
+/* Container for the todo list */
+.todo-list-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f7f7f7;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Task list items */
+.task-row-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+/* Completed tasks */
+.completed-task-row {
+    text-decoration: line-through;
+    color: #888;
+    background-color: #e0e0e0;
+}
+
+/* Task title */
+.task-row-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Task details */
+.task-row-container span {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+/* Timer buttons */
+.timer-button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.timer-button:hover {
+    background-color: #0056b3;
+}
+
+/* Input fields */
+input[type="text"] {
+    padding: 5px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* Add new task button */
+button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    border: none;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #218838;
+}
