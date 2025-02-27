@@ -1,3 +1,12 @@
+# The goal
+
+This is git repro that stores all of my test typescript exercises.
+I'm hoping to do a bunch of these to get my brain going before I start 
+a larger project.
+Currently the list is:
+1. Pomodoro timer
+2. Todo list 
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).

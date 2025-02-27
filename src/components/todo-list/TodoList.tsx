@@ -11,6 +11,7 @@ export type SingleTaskProps = Omit<Task, 'id'> & {
     setIsDone: () => void;
     toggleEditMode: () => void;
     updateTask: (title: string, details: string) => void;
+    deleteTask: () => void;
 }
 
 export const SingleTask = React.memo(({
@@ -20,7 +21,8 @@ export const SingleTask = React.memo(({
                                           setIsDone,
                                           isEditMode,
                                           toggleEditMode,
-                                          updateTask
+                                          updateTask,
+                                          deleteTask
                                       }: SingleTaskProps) => {
     const [updatedTitle, setUpdatedTitle] = useState(title);
     const [updatedDetails, setUpdatedDetails] = useState(details);
@@ -60,6 +62,7 @@ export const SingleTask = React.memo(({
 
                     {isEditMode ? "Finish" : "Edit"}
                 </button>
+                <button onClick={deleteTask} className="timer-button">Delete</button>
             </div>
         </li>
     );
@@ -82,6 +85,7 @@ export const TodoList = ({ todoListActions, todoListState }: TodoListProps) => {
                         isEditMode={task.isEditMode}
                         toggleEditMode={() => todoListActions.updateTask({ ...task, isEditMode: !task.isEditMode })}
                         updateTask={(title, details) => todoListActions.updateTask({ ...task, details, title,  isEditMode: !task.isEditMode  })}
+                        deleteTask={() => todoListActions.deleteTask(task.id)}
                     />
                 ))}
             </ul>
