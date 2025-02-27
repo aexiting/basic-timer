@@ -38,7 +38,7 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
                 isEditMode: false
             }
             if (prevState.listOfTasks.length < maxTasks) {
-                return {...prevState, listOfTasks: [...prevState.listOfTasks, newTask]}
+                return {...prevState, listOfTasks: [...prevState.listOfTasks, newTask], error: null}
             } else {
                 return {...prevState, error: 'Too many tasks being saved.'}
             }
@@ -56,7 +56,7 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
             const newTaskList = prevState.listOfTasks.map(task =>
                 task.id === id ? { ...task, title, details, isDone, isEditMode } : task
             );
-            return {...prevState, listOfTasks: newTaskList}
+            return {...prevState, listOfTasks: newTaskList, error: null}
         })
     }
 
@@ -67,7 +67,7 @@ const useTodoListState = ({ maxTasks, listOfTasks}: TodoListStateProps): [TodoLi
                 return {...prevState, error: 'Task could not be found.'}
             }
             const newTaskList = prevState.listOfTasks.filter( task => task.id !== id)
-            return {...prevState, listOfTasks: newTaskList}
+            return {...prevState, listOfTasks: newTaskList, error: null}
         })
     }
 
